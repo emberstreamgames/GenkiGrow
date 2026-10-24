@@ -66,6 +66,14 @@ button:disabled { opacity: 0.85; cursor: default; }
 .combo { min-width: 4.5em; text-align: right; color: var(--dim); font-weight: 600; transition: transform 0.2s; }
 .combo.hot { color: var(--gold); transform: scale(1.15); }
 
+.dots { flex: 1; display: flex; gap: 5px; }
+.dots i { flex: 1; height: 10px; border-radius: 999px; background: var(--panel); transition: background 0.2s; }
+.dots i.done { background: var(--good); }
+.dots i.now { background: var(--accent); }
+.quit { padding: 6px 12px; font-size: 0.85rem; color: var(--dim); }
+.summary p { margin: 0.4em 0; }
+.summary button { margin-top: 12px; }
+
 .stage { position: relative; display: flex; justify-content: center; }
 
 .card {
@@ -87,6 +95,8 @@ button:disabled { opacity: 0.85; cursor: default; }
 .card.shake { border-color: var(--bad); animation: shake 0.4s; }
 .tagline { color: var(--dim); font-size: 0.8rem; text-transform: uppercase; letter-spacing: 0.08em; }
 .big { font-size: clamp(4rem, 22vw, 7.5rem); line-height: 1.1; font-weight: 500; }
+.big.long { font-size: clamp(1.7rem, 7vw, 2.8rem); line-height: 1.4; }
+.hint { color: var(--dim); font-size: 1rem; }
 .answer { font-size: 2.2rem; font-weight: 700; color: var(--gold); animation: pop-in 0.25s; }
 
 .choices { display: grid; grid-template-columns: 1fr 1fr; gap: 10px; width: 100%; }
@@ -165,3 +175,57 @@ input:focus { outline: none; border-color: var(--accent); }
 .settings select { background: var(--panel2); border: 1px solid #343860; border-radius: 10px; padding: 8px; }
 .file { background: var(--panel2); border: 1px solid #343860; border-radius: 12px; padding: 10px 14px; cursor: pointer; }
 .file input { display: none; }
+
+/* garden */
+.ver { text-align: center; margin-top: 24px; }
+.linkish { background: none; border: none; color: var(--dim); padding: 4px 8px; font-size: 0.8rem; }
+.plots { display: grid; grid-template-columns: repeat(4, 1fr); gap: 8px; padding: 10px; border-radius: 20px; background: #2a2118; border: 2px solid #3d2f20; }
+.plot { position: relative; aspect-ratio: 1; padding: 0; border-radius: 14px; background: #4a3623; border-color: #5a4430; display: grid; place-items: center; overflow: hidden; }
+.plot.empty { background: #33281b; border-style: dashed; }
+.plot.ready { border-color: var(--gold); box-shadow: 0 0 14px -2px var(--gold); animation: pulse 1.6s ease-in-out infinite; }
+.plot.thirsty { border-color: #4f8fd8; }
+.plot .plus { color: #6b563f; font-size: 1.6rem; }
+.plot .badge { position: absolute; top: 3px; right: 4px; font-size: 0.85rem; }
+.sprite { display: block; width: 100%; height: 100%; overflow: visible; }
+.plot .sprite { width: 92%; height: 92%; }
+.plant { transform-box: view-box; transform-origin: 50px 86px; animation: grow 0.6s cubic-bezier(0.2, 1.3, 0.4, 1) backwards, sway 5s ease-in-out infinite; }
+.plant.still { animation: none; }
+.gstatus { text-align: center; color: var(--dim); margin: 14px 0 0; }
+
+.backdrop { position: fixed; inset: 0; background: #000a; display: flex; align-items: flex-end; justify-content: center; z-index: 10; }
+.sheet { position: relative; width: 100%; max-width: 640px; max-height: 88vh; overflow-y: auto; background: var(--panel); border: 2px solid #343860; border-radius: 24px 24px 0 0; padding: 20px 18px max(20px, env(safe-area-inset-bottom)); text-align: center; animation: pop-in 0.2s; }
+.sheet .x { position: absolute; top: 10px; right: 10px; padding: 6px 10px; }
+.sheet p { margin: 0.3em 0; }
+.sheet .hero .sprite { width: 150px; height: 150px; margin: 0 auto; }
+.big-btn { width: 100%; margin-top: 14px; padding: 14px; font-size: 1.05rem; }
+.remove { margin-top: 16px; font-size: 0.85rem; padding: 6px 12px; background: none; }
+.note { margin-top: 14px; color: var(--gold); }
+.group { text-align: left; margin-top: 8px; }
+.group h3 { font-size: 0.95rem; margin: 10px 0 6px; }
+.picks { display: grid; grid-template-columns: 1fr 1fr; gap: 8px; }
+.pick { display: flex; align-items: center; gap: 8px; text-align: left; }
+.pick .sprite { width: 48px; height: 48px; flex: none; }
+
+@keyframes grow { from { transform: scale(0.4); opacity: 0; } }
+@keyframes sway { 0%, 100% { transform: rotate(-1.6deg); } 50% { transform: rotate(1.6deg); } }
+@keyframes pulse { 50% { box-shadow: 0 0 22px 0 var(--gold); } }
+@media (prefers-reduced-motion: reduce) { .plot.ready, .sheet, .plant { animation: none !important; } }
+
+/* celebration effects */
+.fxwrap { position: relative; }
+.fx { position: absolute; inset: 0; pointer-events: none; overflow: visible; }
+.fx i, .fx b { position: absolute; left: 50%; }
+.fx .drop { top: -12px; width: calc(8px * var(--sz)); height: calc(12px * var(--sz)); margin-left: var(--x); background: #5bb6ff; border-radius: 50% 50% 50% 50% / 62% 62% 38% 38%; opacity: 0; animation: fall 0.9s var(--delay) ease-in forwards; }
+.fx .ring { top: 55%; width: 20px; height: 20px; margin: -10px; border: 3px solid #5bb6ff; border-radius: 50%; opacity: 0; animation: splash 0.8s 0.75s ease-out forwards; }
+.fx.grow .ring { top: 60%; border-color: var(--good); animation-delay: 0s; }
+.fx .star { top: 50%; width: calc(14px * var(--sz)); height: calc(14px * var(--sz)); margin: var(--y) 0 0 var(--x); background: var(--gold); clip-path: polygon(50% 0, 62% 38%, 100% 50%, 62% 62%, 50% 100%, 38% 62%, 0 50%, 38% 38%); opacity: 0; animation: twinkle 0.9s var(--delay) ease-in-out forwards; }
+.fx .leafy { bottom: 20%; width: calc(8px * var(--sz)); height: calc(8px * var(--sz)); margin-left: var(--x); background: var(--good); border-radius: 0 80% 0 80%; opacity: 0; animation: rise-up 1s var(--delay) ease-out forwards; }
+.fx .petal { top: 40%; width: calc(10px * var(--sz)); height: calc(14px * var(--sz)); margin: -7px; background: var(--c); border-radius: 50%; opacity: 0; animation: fly-out 1.1s var(--delay) cubic-bezier(0.1, 0.8, 0.3, 1) forwards; }
+.hero { position: relative; }
+
+@keyframes fall { 0% { transform: translateY(0); opacity: 0; } 15% { opacity: 1; } 100% { transform: translateY(120px); opacity: 0.9; } }
+@keyframes splash { 0% { transform: scale(0.3); opacity: 0.9; } 100% { transform: scale(4); opacity: 0; } }
+@keyframes twinkle { 0% { transform: scale(0) rotate(0); opacity: 0; } 40% { transform: scale(1.2) rotate(45deg); opacity: 1; } 100% { transform: scale(0) rotate(90deg); opacity: 0; } }
+@keyframes rise-up { 0% { transform: translateY(0) rotate(0); opacity: 0; } 20% { opacity: 1; } 100% { transform: translateY(-90px) rotate(120deg); opacity: 0; } }
+@keyframes fly-out { 0% { transform: translate(0, 0) scale(0.4); opacity: 0; } 15% { opacity: 1; } 100% { transform: translate(var(--dx), var(--dy)) scale(1) rotate(160deg); opacity: 0; } }
+@media (prefers-reduced-motion: reduce) { .fx { display: none; } }

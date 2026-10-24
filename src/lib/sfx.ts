@@ -42,3 +42,31 @@ export function levelUp() {
   if (!ready()) return
   ;[523, 659, 784, 1047].forEach((f, i) => tone(f, i * 0.09, 0.2, 'square', 0.07))
 }
+
+// Garden cues. Callers check the mute setting first, like the quiz does.
+
+// Soft falling droplets.
+export function water() {
+  if (!ready()) return
+  ;[880, 740, 990, 660, 820].forEach((f, i) => tone(f, i * 0.11, 0.16, 'sine', 0.1))
+  tone(330, 0.6, 0.35, 'sine', 0.07)
+}
+
+// A light sparkle for grooming.
+export function groom() {
+  if (!ready()) return
+  ;[1319, 1568, 1760, 2093].forEach((f, i) => tone(f, i * 0.07, 0.14, 'triangle', 0.06))
+}
+
+// A rising chime when a plant moves to its next stage.
+export function grow() {
+  if (!ready()) return
+  ;[392, 494, 587, 784].forEach((f, i) => tone(f, i * 0.1, 0.25, 'triangle', 0.09))
+}
+
+// A fuller arpeggio and chord for a flower opening.
+export function bloom() {
+  if (!ready()) return
+  ;[523, 659, 784, 1047, 1319].forEach((f, i) => tone(f, i * 0.1, 0.3, 'triangle', 0.08))
+  ;[523, 659, 784, 1047].forEach((f) => tone(f, 0.6, 0.8, 'sine', 0.06))
+}

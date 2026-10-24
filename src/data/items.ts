@@ -1,4 +1,8 @@
-export type Deck = 'hiragana' | 'katakana' | 'kanji' | 'vocab'
+import { grammarItems } from './grammar'
+import { kanjiItems } from './kanji'
+import { vocabItems } from './vocab'
+
+export type Deck = 'hiragana' | 'katakana' | 'kanji' | 'vocab' | 'grammar'
 
 export interface Item {
   id: string
@@ -7,7 +11,8 @@ export interface Item {
   front: string // what is shown as the prompt
   back: string // display form of the answer
   answers: string[] // accepted typed answers (lowercase)
-  tag: 'basic' | 'dakuten' | 'handakuten' | 'combo'
+  tag: string // small label shown above the prompt, e.g. 'basic' or 'Lesson 3'
+  hint?: string // optional extra shown under the prompt (a reading, a translation)
 }
 
 // [hiragana, romaji, ...alternate accepted romaji]
@@ -55,7 +60,7 @@ const combo: Row[] = [
 const toKatakana = (s: string) =>
   [...s].map((c) => String.fromCharCode(c.charCodeAt(0) + 0x60)).join('')
 
-function build(rows: Row[], tag: Item['tag']): Item[] {
+function build(rows: Row[], tag: string): Item[] {
   const out: Item[] = []
   for (const [hira, romaji, ...alts] of rows) {
     const answers = [romaji, ...alts]
@@ -66,17 +71,48 @@ function build(rows: Row[], tag: Item['tag']): Item[] {
   return out
 }
 
-// Kanji and vocabulary arrive in a later phase (from the textbook page images).
 export const ITEMS: Item[] = [
   ...build(basic, 'basic'),
   ...build(dakuten, 'dakuten'),
   ...build(handakuten, 'handakuten'),
   ...build(combo, 'combo'),
+  ...vocabItems(),
+  ...kanjiItems(),
+  ...grammarItems(),
 ]
+
+// A deck needs at least this many items before its plant can be planted.
+export const MIN_DECK_SIZE = 10
+export const deckReady = (d: Deck): boolean => ITEMS.filter((i) => i.type === d).length >= MIN_DECK_SIZE
+
+// What the typed-answer box asks for.
+export const DECK_PROMPT: Record<Deck, string> = {
+  hiragana: 'type the romaji',
+  katakana: 'type the romaji',
+  kanji: 'type the meaning',
+  vocab: 'type the meaning',
+  grammar: 'type the missing word',
+}
+
+// Content mistakes are easy to make by hand; flag them while developing.
+if (import.meta.env.DEV) {
+  const seen = new Set<string>()
+  for (const it of ITEMS) {
+    const problems: string[] = []
+    if (seen.has(it.id)) problems.push('duplicate id')
+    seen.add(it.id)
+    if (!it.front || !it.back) problems.push('empty front or back')
+    if (!it.answers.length) problems.push('no accepted answers')
+    if (it.answers.some((a) => a !== a.trim().toLowerCase())) problems.push('answers must be trimmed lowercase')
+    if (!Number.isInteger(it.lesson) || it.lesson < 0 || it.lesson > 12) problems.push('lesson must be 0-12')
+    if (problems.length) console.warn(`[items] ${it.id}: ${problems.join(', ')}`)
+  }
+}
 
 export const DECK_LABEL: Record<Deck, string> = {
   hiragana: 'Hiragana',
   katakana: 'Katakana',
   kanji: 'Kanji',
   vocab: 'Vocabulary',
+  grammar: 'Grammar',
 }

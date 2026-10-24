@@ -1,17 +1,20 @@
 <script lang="ts">
   import Flashcards from './lib/Flashcards.svelte'
+  import Garden from './lib/Garden.svelte'
   import Stats from './lib/Stats.svelte'
   import { app, toggleLesson } from './lib/store.svelte'
 
-  type Tab = 'hiragana' | 'katakana' | 'kanji' | 'vocab' | 'stats'
+  type Tab = 'garden' | 'hiragana' | 'katakana' | 'kanji' | 'vocab' | 'grammar' | 'stats'
   const tabs: { id: Tab; label: string }[] = [
+    { id: 'garden', label: 'Garden' },
     { id: 'hiragana', label: 'ひらがな' },
     { id: 'katakana', label: 'カタカナ' },
     { id: 'kanji', label: '漢字' },
     { id: 'vocab', label: 'Vocab' },
+    { id: 'grammar', label: 'Grammar' },
     { id: 'stats', label: 'Stats' },
   ]
-  let tab = $state<Tab>('hiragana')
+  let tab = $state<Tab>('garden')
   const lessons = Array.from({ length: 13 }, (_, i) => i)
 </script>
 
@@ -37,6 +40,8 @@
 
   {#if tab === 'stats'}
     <Stats />
+  {:else if tab === 'garden'}
+    <Garden />
   {:else}
     <Flashcards deck={tab} />
   {/if}
